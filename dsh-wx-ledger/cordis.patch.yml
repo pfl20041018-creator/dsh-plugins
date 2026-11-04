@@ -1,0 +1,10 @@
+﻿# dsh-wx-ledger —— 微信「这口能不能说」的闸门 + 已经说出去的话的账本
+# 只读 dsh-wechat-bridge 留在磁盘上的状态，不启动 sidecar、不连微信、不发送。
+- insert:
+    - id: wx-ledger
+      name: '@pfl20041018-creator/dsh-wx-ledger'
+      config:
+        # 微信桥状态目录。留空 = 自动找：
+        #   环境变量 DSH_WX_BRIDGE_STATE → $DSH_PROFILE_DIR/node_modules/dsh-wechat-bridge/sidecar/.state
+        #   → D:/AI/DSH/plugins/dsh-wechat-bridge/sidecar/.state
+        stateDir: ""

@@ -1,0 +1,4 @@
+﻿- insert:
+    - id: wx-moments
+      name: '@pfl20041018-creator/dsh-wx-moments'
+      config: {}

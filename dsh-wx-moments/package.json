@@ -1,0 +1,35 @@
+﻿{
+    "name": "@pfl20041018-creator/dsh-wx-moments",
+    "version":  "1.0.0",
+    "type":  "module",
+    "description":  "微信朋友圈：读动态、截图看内容、点赞、评论",
+    "engines":  {
+                    "dsh":  "\u003e=0.2.1-rc.2"
+                },
+    "exports":  {
+                    ".":  "./index.js",
+                    "./locale/*.json":  "./locale/*.json",
+                    "./icon":  "./icon.svg"
+                },
+    "files":  [
+                  "index.js",
+                  "cordis.patch.yml",
+                  "sidecar/moments.py",
+                  "locale/*.json",
+                  "icon.svg",
+                  "MOMENTS.md",
+                  "README.md"
+              ],
+    "dsh":  {
+                "bundle":  {
+                               "patch":  "./cordis.patch.yml"
+                           }
+            },
+    "license":  "MIT",
+    "author":  "pfl20041018-creator",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/pfl20041018-creator/dsh-plugins.git",
+                       "directory":  "dsh-wx-moments"
+                   }
+}

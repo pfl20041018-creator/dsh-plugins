@@ -1,0 +1,32 @@
+﻿{
+    "name": "@pfl20041018-creator/dsh-memory-hub",
+    "version":  "1.0.0",
+    "type":  "module",
+    "description":  "记忆总账：只读汇总 + 跨源搜索本机所有记忆来源",
+    "engines":  {
+                    "dsh":  "\u003e=0.2.1-rc.2"
+                },
+    "exports":  {
+                    ".":  "./index.js",
+                    "./locale/*.json":  "./locale/*.json",
+                    "./icon":  "./icon.svg"
+                },
+    "files":  [
+                  "index.js",
+                  "cordis.patch.yml",
+                  "locale/*.json",
+                  "icon.svg"
+              ],
+    "dsh":  {
+                "bundle":  {
+                               "patch":  "./cordis.patch.yml"
+                           }
+            },
+    "license":  "MIT",
+    "author":  "pfl20041018-creator",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/pfl20041018-creator/dsh-plugins.git",
+                       "directory":  "dsh-memory-hub"
+                   }
+}

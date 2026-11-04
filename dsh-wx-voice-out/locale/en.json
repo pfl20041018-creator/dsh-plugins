@@ -1,0 +1,6 @@
+﻿{
+  "meta": {
+    "title": "微信语音回复",
+    "description": "用她自己的声音合成一段话，并作为微信语音气泡发出去（本地 GPT-SoVITS，不花 token）"
+  }
+}

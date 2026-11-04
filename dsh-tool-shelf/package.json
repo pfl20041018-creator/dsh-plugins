@@ -1,0 +1,29 @@
+﻿{
+    "name": "@pfl20041018-creator/dsh-tool-shelf",
+    "version":  "1.0.2",
+    "type":  "module",
+    "description":  "Keep rarely used tools off the prompt and load them on demand through one small tool.",
+    "exports":  {
+                    ".":  "./index.js",
+                    "./locale/*.json":  "./locale/*.json",
+                    "./icon":  "./icon.svg"
+                },
+    "files":  [
+                  "index.js",
+                  "cordis.patch.yml",
+                  "locale/*.json",
+                  "icon.svg"
+              ],
+    "dsh":  {
+                "bundle":  {
+                               "patch":  "./cordis.patch.yml"
+                           }
+            },
+    "license":  "MIT",
+    "author":  "pfl20041018-creator",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/pfl20041018-creator/dsh-plugins.git",
+                       "directory":  "dsh-tool-shelf"
+                   }
+}

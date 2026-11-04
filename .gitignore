@@ -1,0 +1,11 @@
+﻿node_modules/
+*.log
+.DS_Store
+Thumbs.db
+
+# 运行期状态，绝对不要提交
+sidecar/.state/
+sidecar/__pycache__/
+**/.state/
+**/__pycache__/
+*.pyc

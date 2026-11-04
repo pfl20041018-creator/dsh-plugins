@@ -1,0 +1,4 @@
+﻿- insert:
+    - id: memory-hub
+      name: '@pfl20041018-creator/dsh-memory-hub'
+      config: {}

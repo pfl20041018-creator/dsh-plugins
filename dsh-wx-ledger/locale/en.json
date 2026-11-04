@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "WeChat Gate & Ledger",
+    "description": "Shows whether a WeChat auto-reply may go out right now (active window, reply gap, proactive quota, idle gate) and lets the agent read back what was actually sent — including rows that were never confirmed in the local database. Read-only."
+  }
+}

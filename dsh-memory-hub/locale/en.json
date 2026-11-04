@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Memory Hub",
+    "description": "Read-only inventory of every memory source on this machine, plus cross-source keyword search (facts, session transcripts, whale diary, WeChat ledger, voice transcripts)"
+  }
+}

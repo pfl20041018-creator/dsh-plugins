@@ -1,0 +1,41 @@
+﻿{
+    "name": "@pfl20041018-creator/dsh-wx-ledger",
+    "version":  "1.0.0",
+    "type":  "module",
+    "description":  "微信发言闸门与发出账本：距离上一条外发够不够节流、主动开口额度还剩多少、最近哪几条点了发送却没在库里确认。只读磁盘。",
+    "keywords":  [
+                     "deepseek-harness",
+                     "dsh",
+                     "cordis",
+                     "wechat",
+                     "auto-reply",
+                     "ledger"
+                 ],
+    "engines":  {
+                    "dsh":  "\u003e=0.2.1-rc.2"
+                },
+    "exports":  {
+                    ".":  "./index.js",
+                    "./locale/*.json":  "./locale/*.json",
+                    "./icon":  "./icon.svg"
+                },
+    "files":  [
+                  "index.js",
+                  "cordis.patch.yml",
+                  "locale/*.json",
+                  "icon.svg",
+                  "README.md"
+              ],
+    "dsh":  {
+                "bundle":  {
+                               "patch":  "./cordis.patch.yml"
+                           }
+            },
+    "license":  "MIT",
+    "author":  "pfl20041018-creator",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/pfl20041018-creator/dsh-plugins.git",
+                       "directory":  "dsh-wx-ledger"
+                   }
+}

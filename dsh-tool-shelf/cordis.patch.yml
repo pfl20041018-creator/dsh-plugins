@@ -1,0 +1,10 @@
+﻿- insert:
+    - id: tool-shelf
+      name: '@pfl20041018-creator/dsh-tool-shelf'
+      config:
+        prefixes:
+          - 'office_'
+          - 'schedule_'
+          - 'moments_'
+        exact:
+          - 'workflow'
