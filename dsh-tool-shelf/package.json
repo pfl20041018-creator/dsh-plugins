@@ -1,6 +1,6 @@
-﻿{
+{
     "name": "@pfl20041018-creator/dsh-tool-shelf",
-    "version":  "1.0.2",
+    "version": "1.1.0",
     "type":  "module",
     "description":  "Keep rarely used tools off the prompt and load them on demand through one small tool.",
     "exports":  {

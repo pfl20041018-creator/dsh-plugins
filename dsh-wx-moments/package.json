@@ -1,6 +1,6 @@
-﻿{
+{
     "name": "@pfl20041018-creator/dsh-wx-moments",
-    "version":  "1.0.0",
+    "version": "1.1.0",
     "type":  "module",
     "description":  "微信朋友圈：读动态、截图看内容、点赞、评论",
     "engines":  {

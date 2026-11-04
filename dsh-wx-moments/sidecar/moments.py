@@ -58,6 +58,25 @@ def _mouse_click(x, y):
         _log("点按失败", x, y, exc)
 
 
+def _mouse_down(x, y):
+    try:
+        import ctypes
+        u32 = ctypes.windll.user32
+        u32.SetCursorPos(int(x), int(y))
+        time.sleep(0.15)
+        u32.mouse_event(0x0002, 0, 0, 0, 0)
+    except Exception as exc:
+        _log("按下失败", x, y, exc)
+
+
+def _mouse_up():
+    try:
+        import ctypes
+        ctypes.windll.user32.mouse_event(0x0004, 0, 0, 0, 0)
+    except Exception:
+        pass
+
+
 def _press_key(vk):
     try:
         import ctypes
@@ -783,6 +802,11 @@ class MomentsSidecar:
         visibility = str(params.get("visibility") or "public").lower()
         if visibility not in ("public", "private"):
             visibility = "public"
+        if visibility == "private":
+            # 「谁可以看」那套弹层是独立顶层窗口，点完焦点会被抢走，点击坐标
+            # 会落到别的窗口上（实测误触「取消 → 保留」）。先不做这个功能，
+            # 宁可拒绝也不乱点。
+            raise RuntimeError("暂不支持私密发布，先发公开，再去朋友圈里改可见范围")
         if _screen_locked():
             raise RuntimeError("屏幕锁着，先解锁再发")
         gui = self.wx()._gui
@@ -798,33 +822,105 @@ class MomentsSidecar:
         def point(fx, fy):
             return left + int(width * fx), top + int(height * fy)
 
-        # 1) 相机按钮 → 文件选择框
-        _mouse_click(*point(0.875, 0.104))
-        time.sleep(1.8)
-        if not _wait_dialog(6.0):
-            raise RuntimeError("没等到选图窗口（相机按钮没点上？）")
+        # 1) 相机按钮：认图，不认固定坐标（换屏幕/换缩放后才不会偏）
+        hwnd = gui.main_hwnd
+        try:
+            # 先找 sidecar 同目录（开源包里自带一份 wxui.py），再退回本机共享目录
+            _here = os.path.dirname(os.path.abspath(__file__))
+            for _p in (_here, r"D:\AI\DSH\yoyo\tools"):
+                if _p and _p not in sys.path:
+                    sys.path.append(_p)
+            import wxui
+            wxui.dpi_aware()
+        except Exception as exc:
+            wxui = None
+            _log("认图模块没加载，退回比例坐标", exc)
+
+        def camera_center():
+            if wxui is not None:
+                hit = wxui.locate_screen(hwnd, "camera-btn", region_frac=(0.80, 0.0, 1.0, 0.25))
+                if hit:
+                    return hit[0], hit[1]
+            return point(0.875, 0.104)
+
+        cam_x, cam_y = camera_center()
         if images:
+            _mouse_click(cam_x, cam_y)
+            time.sleep(1.8)
+            if not _wait_dialog(6.0):
+                raise RuntimeError("没等到选图窗口（相机按钮没点上？）")
             _pick_files(images)
             time.sleep(2.5)
         else:
-            _press_key(0x1B)  # ESC：不发图，直接进文字编辑
+            # 纯文字：微信是「长按相机」进文字编辑；短按只会开选图框，
+            # 而 ESC 关选图框会把整个发布框一起关掉（之前的坑）。
+            _mouse_down(cam_x, cam_y)
+            time.sleep(1.1)
+            _mouse_up()
             time.sleep(1.5)
-        # 2) 文案
-        _mouse_click(*point(0.537, 0.136))
+        # 2) 文案：点编辑框里的占位行（0.136 太靠上，会点空导致粘不上）
+        _mouse_click(*point(0.45, 0.20))
         time.sleep(0.4)
         _paste_text(text)
         time.sleep(0.8)
-        # 3) 可见范围
+        # 3) 可见范围：「谁可以看」整行 + 「私密」两个字 + 绿色「确定」，全认图
         if visibility == "private":
-            _mouse_click(*point(0.537, 0.746))
-            time.sleep(1.0)
-            _mouse_click(*point(0.301, 0.389))
-            time.sleep(0.5)
-            _mouse_click(*point(0.4125, 0.803))
-            time.sleep(1.0)
-        # 4) 发表
-        _mouse_click(*point(0.4125, 0.805))
-        time.sleep(3.0)
+            if wxui is not None:
+                hit = wxui.locate_screen(hwnd, "audience-row")
+                if hit:
+                    wxui.click_screen(hit[0], hit[1])
+                else:
+                    _mouse_click(*point(0.537, 0.746))
+                time.sleep(1.3)
+                hit = wxui.locate_screen(hwnd, "private-opt")
+                if hit:
+                    wxui.click_screen(hit[0], hit[1])
+                else:
+                    _mouse_click(*point(0.301, 0.389))
+                time.sleep(0.9)
+                confirmed = wxui.click_green(
+                    hwnd,
+                    region=(int(width * 0.22), int(height * 0.55), int(width * 0.86), height),
+                )
+                if not confirmed:
+                    _mouse_click(*point(0.4125, 0.803))
+                time.sleep(2.0)  # 可见范围对话框收起后布局要重排，等稳了再点发表
+            else:
+                _mouse_click(*point(0.537, 0.746))
+                time.sleep(1.0)
+                _mouse_click(*point(0.301, 0.389))
+                time.sleep(0.5)
+                _mouse_click(*point(0.4125, 0.803))
+                time.sleep(1.0)
+        # 4) 发表：认「微信绿」的按钮（弹窗高度随内容变，固定比例必点空）。
+        # 朋友圈是独立顶层窗口，点「确定」后焦点会跑到那个窗口上，第一次点
+        # 「发表」常常只起到「激活窗口」的作用——所以点完要看发布框还在不在，
+        # 还在就补一下。
+        published = False
+        if wxui is not None:
+            # 朋友圈弹窗是独立顶层窗口，点完「确定」后它会抢焦点；不把主窗口
+            # 重新提到前台，后面的点击会落到那个窗口的本地坐标上（实测点到
+            # 「取消 → 保留」，微信提示「已保存到个人相册」）。
+            try:
+                import ctypes as _ct
+
+                _ct.windll.user32.SetForegroundWindow(hwnd)
+                time.sleep(0.6)
+            except Exception:
+                pass
+            for _ in range(3):
+                if not wxui.click_green(
+                    hwnd,
+                    region=(int(width * 0.20), int(height * 0.55), int(width * 0.85), height),
+                ):
+                    break
+                time.sleep(1.6)
+                if wxui.locate_screen(hwnd, "audience-row") is None:
+                    published = True
+                    break
+        if not published:
+            _mouse_click(*point(0.4125, 0.841))
+        time.sleep(2.5)
         # 5) 回读
         verified, seen = _verify_publish(self.mdb(), text, timeout=12.0)
         return {

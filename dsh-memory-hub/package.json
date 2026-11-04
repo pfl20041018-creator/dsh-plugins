@@ -1,6 +1,6 @@
-﻿{
+{
     "name": "@pfl20041018-creator/dsh-memory-hub",
-    "version":  "1.0.0",
+    "version": "1.1.0",
     "type":  "module",
     "description":  "记忆总账：只读汇总 + 跨源搜索本机所有记忆来源",
     "engines":  {

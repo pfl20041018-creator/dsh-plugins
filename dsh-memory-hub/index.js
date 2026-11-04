@@ -1,4 +1,4 @@
-﻿// 记忆总账：只看不改。
+// 记忆总账：只看不改。
 //
 // 这台机器上的记忆散在十来处（人设卡、事实卡、心情、会话原文、压缩缓存、
 // 微信账本、鲸鱼日记、表情库、用量、日程）。本插件不接管任何一处写入，
@@ -26,14 +26,13 @@ const USAGE_FILE = join(DSH_HOME, '.dshw-usage.json');
 const WX_STATE = join(PROFILE_DIR, 'node_modules', '@local', 'dsh-wechat-bridge', 'sidecar', '.state');
 // 鲸鱼的家搬过两次：先在工作区，后来才挪到 ~/.dsh。两处都认。
 const WHALE_STATE_CANDIDATES = [
-  join(process.cwd(), 'bili-whale', 'state'),
+  join('D:\\AI\\DSH\\yoyo', 'bili-whale', 'state'),
   join(DSH_HOME, 'bili-whale', 'state'),
 ];
 const MEME_DIR = join(PROFILE_DIR, 'node_modules', 'dsh-meme', 'memes');
-// dsh-world 的世界目录；DSH_HOME 下的 worlds 可能是指向 workspace 的软链接
+// dsh-world 的世界目录（本机是 junction，实际落在 D:\AI\DSH\yoyo\worlds）
 const WORLDS_DIR = join(DSH_HOME, 'worlds');
-// zstd 可执行文件：优先取环境变量，其次走 PATH
-const ZSTD_CANDIDATES = process.env.ZSTD_BIN ? [process.env.ZSTD_BIN, 'zstd'] : ['zstd'];
+const ZSTD_CANDIDATES = ['D:\\Codes\\Anaconda\\Library\\bin\\zstd.exe', 'zstd'];
 
 const asText = (lines) => [{ type: 'text', text: lines.join('\n') }];
 const text = (value) => (typeof value === 'string' ? value.trim() : '');
@@ -861,11 +860,11 @@ export function apply(ctx, config = {}) {
   register({
     name: 'memory_hub_search',
     description:
-      '跨源搜记忆（只读）：在事实卡、会话原文、鲸鱼日记、微信账本、语音转写里按关键词找，返回命中来源 + 片段。scope=all 搜全部；scope=某个聊天目录名（例如 chats-<name>）只搜那一路会话原文，避免把别人的对话带进当前话题。',
+      '跨源搜记忆（只读）：在事实卡、会话原文、鲸鱼日记、微信账本、语音转写里按关键词找，返回命中来源 + 片段。scope=all 搜全部；scope=某个聊天目录名（例如 chats-Gypsophila.）只搜那一路会话原文，避免把别人的对话带进当前话题。',
     parameters: {
       query: { type: 'string', description: '要找的词或句子（中文直接写）', required: true },
       limit: { type: 'number', description: '最多几条，默认 12，上限 40' },
-      scope: { type: 'string', description: 'all（默认）或会话目录关键词，例如 chats-<name>' },
+      scope: { type: 'string', description: 'all（默认）或会话目录关键词，例如 chats-Gypsophila.' },
     },
     output: {
       schema: {
